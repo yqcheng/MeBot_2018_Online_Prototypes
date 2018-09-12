@@ -3,7 +3,7 @@ morning = ["Morning", "Good morning"]
 afternoon = ["Afternoon", "Good afternoon"]
 evening = ["Evening", "Good evening"]
 
-#a secret code for signup
+#a secret code for signup #
 code = "R2D2"
 
 require 'sinatra'
