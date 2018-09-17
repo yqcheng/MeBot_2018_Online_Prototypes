@@ -169,3 +169,5 @@ configure :development do
   require 'dotenv'
   Dotenv.load
 end
+
+require 'twilio-ruby'
