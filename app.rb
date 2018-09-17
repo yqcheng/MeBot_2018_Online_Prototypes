@@ -1,4 +1,6 @@
 #my Twilio number: (614) 972-1846
+require 'twilio-ruby'
+
 
 greetings = ["Hi", "Hello", "What up", "Yo"]
 morning = ["Morning", "Good morning"]
@@ -14,6 +16,10 @@ require "sinatra/reloader" if development?
 
 enable :sessions
 
+configure :development do
+  require 'dotenv'
+  Dotenv.load
+end
 
 get '/' do
 	redirect to "/about"
@@ -106,7 +112,7 @@ get "/sms/incoming" do
     message = "Thanks for your first message. From #{sender} saying #{body}"
     media = "https://media.giphy.com/media/13ZHjidRzoi7n2/giphy.gif"
   else
-    message = "determine_response body"
+    message = hanshu body
     media = nil
   end
 
@@ -134,6 +140,7 @@ get "/sms/incoming" do
 end
 
 
+
 get "/test/conversation" do
 	#set 2 expected variables
 	body = params[:Body]
@@ -145,76 +152,13 @@ get "/test/conversation" do
 	elsif from.nil?
 		 return "I don't see your From. Check your URL for a correct From input!"
 	end
-
-
-	#a method that takes one parameter
-	def determine_response body
-		#normalize and clean the string
-		body = body.downcase.strip
-
-		if body == "hi"
-			return "This bot is a nice bot!"
-		elsif body == "who"
-			return "I am MeBot"
-		elsif body == "what" || body == "help"
-			return "The bot can be used to ask basic things about you"
-		elsif body == "where"
-			return "You're in Pittsburgh"
-		elsif body == "when"
-			return "I was made made in Fall 2018."
-		elsif body == "why"
-			return "I was made for a class project in this class"
-		elsif body == "joke" #request for a joke
-
-=begin  ALTERNATIVE READ FILE
-			########## open a file ##########
-			file = File.open("jokes.txt","r")
-			#store every line to an array
-			array_of_lines = []
-			file.each_line do |line|
-				array_of_lines.push line
-			end
-			``` file.close```
-			########## close a file #########
-=end
-
-			########## simpler way to read a file ##########
-			array_of_lines = IO.readlines("jokes.txt")
-
-			#display a random joke on the browser
-			return "Here you go: " + array_of_lines.sample
-		elsif body == "fact" #tell a fact about me
-			fun_fact = IO.readlines("facts.txt")
-			return fun_fact.sample
-		elsif body == "lol" || body == "haha"
-			return "Funny right?"
-		elsif body == "time"
-			time = Time.now
-			hour = time.hour
-			if hour > 0 && hour < 16
-				status = "I am busy either studying or sleeping!"
-			else
-				status = "Feel free to talk to me!"
-			end
-			return  status
-		end
-	end
-
-		#return value to variable named response
-	 response = determine_response params[:Body]
-
-	 	#not necessary to be in the final content, just a practice
-	 	#concatenate randomized greetings with response
-	 greetings.sample + "! " + response
 end
+
+def hanshu body
+	return "testtttt"
+end
+
 
 error 403 do
 	"Access Forbidden"
 end
-
-configure :development do
-  require 'dotenv'
-  Dotenv.load
-end
-
-require 'twilio-ruby'
