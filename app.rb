@@ -106,7 +106,7 @@ get "/sms/incoming" do
     message = "Thanks for your first message. From #{sender} saying #{body}"
     media = "https://media.giphy.com/media/13ZHjidRzoi7n2/giphy.gif"
   else
-    message = determine_response body
+    message = "determine_response body"
     media = nil
   end
 
