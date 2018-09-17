@@ -49,16 +49,12 @@ end
 
 ########################### bug part 7 #######################################
 get "/signup" do
-	erb :signup
-
-	code = params[:code]
-=begin
 	if params[:code] == code
-		"You've got the code!"
+		erb :signup
 	else
 		403
 	end
-=end
+
 end
 
 
