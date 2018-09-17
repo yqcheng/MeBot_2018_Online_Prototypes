@@ -112,7 +112,7 @@ get "/sms/incoming" do
     message = "Thanks for your first message. From #{sender} saying #{body}"
     media = "https://media.giphy.com/media/13ZHjidRzoi7n2/giphy.gif"
   else
-    message = hanshu body
+    message = determine_response body
     media = nil
   end
 
@@ -154,8 +154,41 @@ get "/test/conversation" do
 	end
 end
 
-def hanshu body
-	return "testtttt"
+def determine_response body
+	#normalize and clean the string
+		body = body.downcase.strip
+
+		if body == "hi"
+			return "This bot is a nice bot!"
+		elsif body == "who"
+			return "I am MeBot"
+		elsif body == "what" || body == "help"
+			return "The bot can be used to ask basic things about you"
+		elsif body == "where"
+			return "You're in Pittsburgh"
+		elsif body == "when"
+			return "I was made made in Fall 2018."
+		elsif body == "why"
+			return "I was made for a class project in this class"
+		elsif body == "joke" #request for a joke
+			array_of_lines = IO.readlines("jokes.txt")
+			#display a random joke on the browser
+			return "Here you go: " + array_of_lines.sample
+		elsif body == "fact" #tell a fact about me
+			fun_fact = IO.readlines("facts.txt")
+			return fun_fact.sample
+		elsif body == "lol" || body == "haha"
+			return "Funny right?"
+		elsif body == "time"
+			time = Time.now
+			hour = time.hour
+			if hour > 0 && hour < 16
+				status = "I am busy either studying or sleeping!"
+			else
+				status = "Feel free to talk to me!"
+			end
+			return  status
+		end
 end
 
 
