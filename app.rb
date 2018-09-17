@@ -73,7 +73,8 @@ post "/signup" do
 	client = Twilio::REST::Client.new ENV["TWILIO_ACCOUNT_SID"], ENV["TWILIO_AUTH_TOKEN"]
 
 	# Include a message here
-	message = "Hi" + params[:first_name] + ", welcome to MeBot! I can respond to who, what, where, when and why. If you're stuck, type help."
+	message = "Hi" + params[:first_name] + " bao! I just made this bot! Say hi to me, and then ask me with keyword: who, what, where, when, and why"
+	# message = "Hi" + params[:first_name] + ", welcome to MeBot! I can respond to who, what, where, when and why. If you're stuck, type help."
 
 	# this will send a message from any end point
 	client.api.account.messages.create(
@@ -105,12 +106,14 @@ end
 
 get "/sms/incoming" do
   session["counter"] ||= 1
-  body = params[:Body] || "Welcome hhh"
+  body = params[:Body] || "hiiiiiiiii"
 	sender = "Qicheng"
 
   if session["counter"] == 1
-    message = "Thanks for your first message. From #{sender} saying #{body}"
-    media = "https://media.giphy.com/media/13ZHjidRzoi7n2/giphy.gif"
+		message = "Hi baooo I am Qicheng bao!"
+    # message = "Thanks for your first message. From #{sender} saying #{body}"
+    # media = "https://media.giphy.com/media/13ZHjidRzoi7n2/giphy.gif"
+		media = "https://media.giphy.com/media/5GdhgaBpA3oCA/giphy.gif"
   else
     message = determine_response body
     media = nil
