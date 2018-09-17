@@ -97,8 +97,40 @@ end
 
 
 
-get "/incoming/sms" do
-	403
+get "/sms/incoming" do
+  session["counter"] ||= 1
+  body = params[:Body] || "Welcome hhh"
+	sender = "Qicheng"
+
+  if session["counter"] == 1
+    message = "Thanks for your first message. From #{sender} saying #{body}"
+    media = "https://media.giphy.com/media/13ZHjidRzoi7n2/giphy.gif"
+  else
+    message = determine_response body
+    media = nil
+  end
+
+	# Build a twilio response object
+  twiml = Twilio::TwiML::MessagingResponse.new do |r|
+    r.message do |m|
+
+			# add the text of the response
+      m.body( message )
+
+			# add media if it is defined
+      unless media.nil?
+        m.media( media )
+      end
+    end
+  end
+
+	# increment the session counter
+  session["counter"] += 1
+
+	# send a response to twilio
+  content_type 'text/xml'
+  twiml.to_s
+
 end
 
 
