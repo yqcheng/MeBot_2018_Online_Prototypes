@@ -1,3 +1,5 @@
+#my Twilio number: (614) 972-1846
+
 greetings = ["Hi", "Hello", "What up", "Yo"]
 morning = ["Morning", "Good morning"]
 afternoon = ["Afternoon", "Good afternoon"]
@@ -159,11 +161,11 @@ get "/test/conversation" do
 	 greetings.sample + "! " + response
 end
 
-
-
-
-
-
 error 403 do
 	"Access Forbidden"
+end
+
+configure :development do
+  require 'dotenv'
+  Dotenv.load
 end
