@@ -73,8 +73,7 @@ post "/signup" do
 	client = Twilio::REST::Client.new ENV["TWILIO_ACCOUNT_SID"], ENV["TWILIO_AUTH_TOKEN"]
 
 	# Include a message here
-	message = "Hi " + params[:first_name] + " bao! I just made this bot! Say hi to me, and then ask me with keyword: who, what, where, when, and why"
-	# message = "Hi" + params[:first_name] + ", welcome to MeBot! I can respond to who, what, where, when and why. If you're stuck, type help."
+	 message = "Hi" + params[:first_name] + ", welcome to MeBot! I can respond to who, what, where, when and why. If you're stuck, type help."
 
 	# this will send a message from any end point
 	client.api.account.messages.create(
@@ -110,8 +109,7 @@ get "/sms/incoming" do
 	sender = "Qicheng"
 
   if session["counter"] == 1
-		message = "Hi baooo I am your Qicheng bao!"
-    # message = "Thanks for your first message. From #{sender} saying #{body}"
+     message = "Thanks for your first message. From #{sender} saying #{body}"
     # media = "https://media.giphy.com/media/13ZHjidRzoi7n2/giphy.gif"
 		media = "https://media.giphy.com/media/5GdhgaBpA3oCA/giphy.gif"
   else
@@ -162,23 +160,17 @@ def determine_response body
 		body = body.downcase.strip
 
 		if body == "hi"
-			return "Hi love!"
-			#return "This bot is a nice bot!"
+			return "This bot is a nice bot!"
 		elsif body == "who"
-			return "I am your bao!"
-			#return "I am MeBot"
+			return "I am MeBot"
 		elsif body == "what" || body == "help"
-			return "I don't know if you still believe, but I need to tell you how much I love you."
-			#return "The bot can be used to ask basic things about you"
+			return "The bot can be used to ask basic things about you"
 		elsif body == "where"
-			return "You are always in my heart."
-			#return "You're in Pittsburgh"
+			return "You're in Pittsburgh"
 		elsif body == "when"
-			return "All this time."
-			#return "I was made made in Fall 2018."
+			return "I was made made in Fall 2018."
 		elsif body == "why"
-			return "I just...just need to believe in you and believe in myself more. And I will prove it to you."
-			#return "I was made for a class project in this class"
+			return "I was made for a class project in this class"
 		elsif body == "joke" #request for a joke
 			array_of_lines = IO.readlines("jokes.txt")
 			#display a random joke on the browser
