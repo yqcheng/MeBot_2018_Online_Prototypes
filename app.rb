@@ -63,20 +63,35 @@ end
 #bug
 post "/signup" do
   # we'll add some code here
-	if params[:code] == code
-		if params[:name]=="" || params[:number]==""
-      "Your information is incompelete, please input again!"
-    else
-      session[:name] = params['first_name']
-      session[:number] = params['number']
-      session[:visits] = 0
-      time = Time.now
-      "Welcome! #{session[:name]}! My app dose Blablablabla.
-      You will receive a text message in a few minutes from the bot."
-    end
-  else
-    403
-  end
+	# code to check parameters
+	client = Twilio::REST::Client.new ENV["TWILIO_ACCOUNT_SID"], ENV["TWILIO_AUTH_TOKEN"]
+
+	# Include a message here
+	message = "Hi" + params[:first_name] + ", welcome to MeBot! I can respond to who, what, where, when and why. If you're stuck, type help."
+
+	# this will send a message from any end point
+	client.api.account.messages.create(
+		from: ENV["TWILIO_FROM"],
+		to: params[:number],
+		body: message
+	)
+	# response if eveything is OK
+	"You're signed up. You'll receive a text message in a few minutes from the bot. "
+
+	# if params[:code] == code
+	# 	if params[:name]=="" || params[:number]==""
+  #     "Your information is incompelete, please input again!"
+  #   else
+  #     session[:name] = params['first_name']
+  #     session[:number] = params['number']
+  #     session[:visits] = 0
+  #     time = Time.now
+  #     "Welcome! #{session[:name]}! My app dose Blablablabla.
+  #     You will receive a text message in a few minutes from the bot."
+  #   end
+  # else
+  #   403
+  # end
 end
 ########################### bug part 7 #######################################
 
