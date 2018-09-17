@@ -102,13 +102,14 @@ get "/sms/incoming" do
   body = params[:Body] || "Welcome hhh"
 	sender = "Qicheng"
 
-  if session["counter"] == 1
-    message = "Thanks for your first message. From #{sender} saying #{body}"
-    media = "https://media.giphy.com/media/13ZHjidRzoi7n2/giphy.gif"
-  else
-    message = determine_response body
-    media = nil
-  end
+  # if session["counter"] == 1
+  #   message = "Thanks for your first message. From #{sender} saying #{body}"
+  #   media = "https://media.giphy.com/media/13ZHjidRzoi7n2/giphy.gif"
+  # else
+  #   message = determine_response body
+  #   media = nil
+  # end
+	message="sss"
 
 	# Build a twilio response object
   twiml = Twilio::TwiML::MessagingResponse.new do |r|
@@ -118,9 +119,9 @@ get "/sms/incoming" do
       m.body( message )
 
 			# add media if it is defined
-      unless media.nil?
-        m.media( media )
-      end
+      # unless media.nil?
+      #   m.media( media )
+      # end
     end
   end
 
