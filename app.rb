@@ -1,6 +1,7 @@
 #my Twilio number: (614) 972-1846
 require 'twilio-ruby'
-
+require 'rickmorty'
+require 'httparty'
 
 greetings = ["Hi", "Hello", "What up", "Yo"]
 morning = ["Morning", "Good morning"]
@@ -155,6 +156,30 @@ get "/test/conversation" do
 	end
 end
 
+# get  "/rick" do
+# 	episodes = Rickmorty::Episode.new
+# 	episodes.all
+# 	api_url = 'https://rickandmortyapi.com/api/character'
+# 	response = HTTParty.get( api_url )
+#
+# 	response["page"].to_json
+#
+# 	characters = response['results']
+# 	character = characters.['name']
+#
+# 	character
+#
+#
+# end
+
+# get "/deckofcard/randomcard" do
+# 	response  = HTTParty.get('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1')
+# 	deck_id = response['deck_id']
+# 	response = HTTParty.get('https://deckofcardsapi.com/api/deck/' + deck_id + '/draw/?count=1')
+# 	response["cards"][0]["value"] + " of " + response["cards"][0]["suit"] + "<img src = '" + response["cards"][0]["image"] + "' />"
+# end
+
+
 def determine_response body
 	#normalize and clean the string
 		body = body.downcase.strip
@@ -189,9 +214,11 @@ def determine_response body
 				status = "Feel free to talk to me!"
 			end
 			return  status
-		elsif body == "rick" ################# Rick and Morty API
-			#episodes = Rickmorty::Episode.new
-			return "Look at this: " 
+		elsif body == "random"
+			response  = HTTParty.get('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1')
+			deck_id = response['deck_id']
+			response = HTTParty.get('https://deckofcardsapi.com/api/deck/' + deck_id + '/draw/?count=1')
+			response["cards"][0]["value"] + " of " + response["cards"][0]["suit"] + "<img src = '" + response["cards"][0]["image"] + "' />"
 		end
 end
 
