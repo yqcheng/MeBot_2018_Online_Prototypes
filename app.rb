@@ -189,6 +189,9 @@ def determine_response body
 				status = "Feel free to talk to me!"
 			end
 			return  status
+		elsif body == "rick" ################# Rick and Morty API
+			episodes = Rickmorty::Episode.new
+			return "Look at this: " + episodes.all
 		end
 end
 
