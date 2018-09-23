@@ -2,6 +2,7 @@
 require 'twilio-ruby'
 require 'rickmorty'
 require 'httparty'
+require 'giphy'
 
 greetings = ["Hi", "Hello", "What up", "Yo"]
 morning = ["Morning", "Good morning"]
@@ -173,12 +174,41 @@ end
 #
 # end
 
-# get "/deckofcard/randomcard" do
-# 	response  = HTTParty.get('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1')
-# 	deck_id = response['deck_id']
-# 	response = HTTParty.get('https://deckofcardsapi.com/api/deck/' + deck_id + '/draw/?count=1')
-# 	response["cards"][0]["value"] + " of " + response["cards"][0]["suit"] + "<img src = '" + response["cards"][0]["image"] + "' />"
-# end
+get "/test/giphy-sms/:search" do
+
+  Giphy::Configuration.configure do |config|
+    config.api_key = ENV["GIPHY_API_KEY"]
+  end
+
+  results = Giphy.search( params[:search], {limit: 3})
+
+  client = Twilio::REST::Client.new ENV["TWILIO_ACCOUNT_SID"], ENV["TWILIO_AUTH_TOKEN"]
+
+  unless results.empty?
+
+    #puts results.to_yaml
+    gif = results.first.original_image.url
+    puts gif
+
+    client.api.account.messages.create(
+      from: ENV["TWILIO_FROM"],
+      to: ENV["TEST_NUMBER"],
+      body: "Here's a random gif matching '#{params[:search]}'.",
+      media_url: gif
+    )
+  else
+
+    client.api.account.messages.create(
+      from: ENV["TWILIO_FROM"],
+      to: ENV["TEST_NUMBER"],
+      body: "Hmmm, that's odd. I couldn't find anything for '#{params[:search]}'. Try something else?"
+    )
+
+  end
+
+  "Sent message"
+
+end
 
 
 def determine_response body
@@ -219,7 +249,6 @@ def determine_response body
 			response  = HTTParty.get('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1')
 			deck_id = response['deck_id']
 			response = HTTParty.get('https://deckofcardsapi.com/api/deck/' + deck_id + '/draw/?count=1')
-
 		end
 end
 

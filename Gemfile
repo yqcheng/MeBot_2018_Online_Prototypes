@@ -7,3 +7,4 @@ gem 'twilio-ruby', ">5.0.0"
 gem 'json'
 gem 'rickmorty'
 gem 'httparty'
+gem 'giphy'
