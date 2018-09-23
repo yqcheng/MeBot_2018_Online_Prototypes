@@ -190,8 +190,8 @@ def determine_response body
 			end
 			return  status
 		elsif body == "rick" ################# Rick and Morty API
-			episodes = Rickmorty::Episode.new
-			return "Look at this: " + episodes.all
+			#episodes = Rickmorty::Episode.new
+			return "Look at this: " 
 		end
 end
 
