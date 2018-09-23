@@ -115,7 +115,7 @@ get "/sms/incoming" do
 		media = "https://media.giphy.com/media/5GdhgaBpA3oCA/giphy.gif"
   else
 		response = determine_response body
-		response["cards"][0]["value"] + " of " + response["cards"][0]["suit"]
+		message = response["cards"][0]["value"] + " of " + response["cards"][0]["suit"]
 		media = response["cards"][0]["image"]
   end
 
