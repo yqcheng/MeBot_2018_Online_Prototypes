@@ -62,6 +62,9 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.19.0, < 2.0)
     rake (12.3.1)
+    rickmorty (1.0.3)
+      faraday (~> 0.9)
+      json (~> 2.0)
     sinatra (2.0.3)
       mustermann (~> 1.0)
       rack (~> 2.0)
@@ -91,6 +94,7 @@ PLATFORMS
 DEPENDENCIES
   dotenv-rails
   json
+  rickmorty
   sinatra
   sinatra-contrib
   twilio-ruby (> 5.0.0)
