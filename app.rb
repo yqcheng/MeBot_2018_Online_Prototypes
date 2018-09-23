@@ -218,8 +218,9 @@ def determine_response body
 			response  = HTTParty.get('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1')
 			deck_id = response['deck_id']
 			response = HTTParty.get('https://deckofcardsapi.com/api/deck/' + deck_id + '/draw/?count=1')
-			response["cards"][0]["value"] + " of " + response["cards"][0]["suit"]
+
 			media = response["cards"][0]["image"]
+			response["cards"][0]["value"] + " of " + response["cards"][0]["suit"] + media
 		end
 end
 
