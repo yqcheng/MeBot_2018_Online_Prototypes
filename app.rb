@@ -115,36 +115,10 @@ get "/sms/incoming" do
     # media = "https://media.giphy.com/media/13ZHjidRzoi7n2/giphy.gif"
 		media = "https://media.giphy.com/media/5GdhgaBpA3oCA/giphy.gif"
   else
-		results = determine_response body
-		# message = response["cards"][0]["value"] + " of " + response["cards"][0]["suit"]
-		# media = response["cards"][0]["image"]
+		response = determine_response body
+		message = response["cards"][0]["value"] + " of " + response["cards"][0]["suit"]
+		media = response["cards"][0]["image"]
 
-		client = Twilio::REST::Client.new ENV["TWILIO_ACCOUNT_SID"], ENV["TWILIO_AUTH_TOKEN"]
-
-		unless results.empty?
-
-			#puts results.to_yaml
-			gif = results.first.original_image.url
-			puts gif
-
-			client.api.account.messages.create(
-				from: ENV["TWILIO_FROM"],
-				to: ENV["TEST_NUMBER"],
-				body: "Here's a random gif matching '#{params[:search]}'.",
-				media_url: gif
-			)
-		else
-
-			client.api.account.messages.create(
-				from: ENV["TWILIO_FROM"],
-				to: ENV["TEST_NUMBER"],
-				body: "Hmmm, that's odd. I couldn't find anything for '#{params[:search]}'. Try something else?"
-			)
-
-		end
-
-		"Sent message"
-	
   end
 
 
@@ -243,12 +217,6 @@ def determine_response body
 			response  = HTTParty.get('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1')
 			deck_id = response['deck_id']
 			response = HTTParty.get('https://deckofcardsapi.com/api/deck/' + deck_id + '/draw/?count=1')
-		elsif body == "gif"
-			Giphy::Configuration.configure do |config|
-				config.api_key = ENV["GIPHY_API_KEY"]
-			end
-
-			results = Giphy.search( params[:search], {limit: 3})
 		end
 end
 
