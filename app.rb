@@ -112,7 +112,8 @@ get "/sms/incoming" do
     # media = "https://media.giphy.com/media/13ZHjidRzoi7n2/giphy.gif"
 		media = "https://media.giphy.com/media/5GdhgaBpA3oCA/giphy.gif"
   else
-		response = determine_response body
+		message = determine_response body
+		media = nil
 
   end
 
@@ -204,7 +205,6 @@ def determine_response body
 			deck_id = response['deck_id']
 			response = HTTParty.get('https://deckofcardsapi.com/api/deck/' + deck_id + '/draw/?count=1')
 			media = response["cards"][0]["image"]
-			return media
 		end
 end
 
