@@ -52,8 +52,8 @@ get "/about" do
 
 
 	if session[:first_name].nil?
-		greet + " new friend! My MeBot is a minimal-interface bot who tells you about the weather today and
-		clothes recommendation. <br/>You have visited " + session["visits"].to_s +
+		greet + " new friend! My YesNo Bot is a minimal-interface to help you make a decision by
+		 drawing a poker card for you. <br/>You have visited " + session["visits"].to_s +
 		" times as of " + time.to_s
 	else
 		greet + " " + session[:first_name] + "! My MeBot is a minimal-interface bot who tells you about the weather today and
@@ -84,9 +84,7 @@ post "/signup" do
 	client = Twilio::REST::Client.new ENV["TWILIO_ACCOUNT_SID"], ENV["TWILIO_AUTH_TOKEN"]
 
 	# Include a message here
-	 message = "Hi" + params[:first_name] + ", welcome to YesNo Bot! I am here to help you make a decision！ Ask me by texting
-	 [who], [what], [where], [why] to learn about me and how to use me. If you already know what you are going for,
-	 text [random] to get the answer you want!"
+	 message = "Hi " + params[:first_name] + ", I am YesNo Bot! Are you curious about me? Say hi to me!"
 
 	# this will send a message from any end point
 	client.api.account.messages.create(
@@ -110,13 +108,11 @@ get "/sms/incoming" do
 	sender = "Qicheng"
 
   if session["counter"] == 1
-     message = "Thanks for your first message. From #{sender} :)"
+     message = "Thanks for your first message. I am here to help you make a decision！ Ask me by texting [who], [what], [where], [why] to learn about me and how to use me. If you already know what you are going for, text [random] to get the answer you want! :)"
     # media = "https://media.giphy.com/media/13ZHjidRzoi7n2/giphy.gif"
 		media = "https://media.giphy.com/media/5GdhgaBpA3oCA/giphy.gif"
   else
 		response = determine_response body
-		message = response["cards"][0]["value"] + " of " + response["cards"][0]["suit"]
-		media = response["cards"][0]["image"]
 
   end
 
@@ -172,13 +168,12 @@ def determine_response body
 	#normalize and clean the string
 		body = body.downcase.strip
 
-		if body == "hi"
+		if body == "hi" || body == "hello"
 			return "Hi! You are finally here!"
 		elsif body == "who"
 			return "I am YesNo Bot created by Qicheng Yang (QC). Want to know more about my creator? Text me [fact]!"
 		elsif body == "what" || body == "help"
-			return "I only do one thing - help you make a decision. Think about a yes or no question in mind, and I will
-			draw a card for you. If it is an even number, it means YES; odd number, means NO. Wanna try? Text [ready]!"
+			return "I only do one thing - help you make a decision. Think about a yes or no question in mind, and I will draw a card for you. If it is an even number, it means YES; odd number, means NO. Wanna try? Text [ready]!"
 		elsif body == "where"
 			return "My creator QC and I reside in Pittsburgh at this very moment!"
 		elsif body == "when"
@@ -208,6 +203,8 @@ def determine_response body
 			response  = HTTParty.get('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1')
 			deck_id = response['deck_id']
 			response = HTTParty.get('https://deckofcardsapi.com/api/deck/' + deck_id + '/draw/?count=1')
+			media = response["cards"][0]["image"]
+			return media
 		end
 end
 
