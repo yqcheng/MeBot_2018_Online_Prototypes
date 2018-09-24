@@ -23,6 +23,11 @@ configure :development do
   Dotenv.load
 end
 
+
+
+#------------------------------------------------------------------------------
+#                         Basic endpoints on web
+#------------------------------------------------------------------------------
 get '/' do
 	redirect to "/about"
 end
@@ -57,7 +62,9 @@ get "/about" do
 	end
 end
 
-########################### bug part 7 #######################################
+#------------------------------------------------------------------------------
+#            Use secrete code in URL to get into the sign up page
+#------------------------------------------------------------------------------
 get "/signup" do
 	if params[:code] == code
 		erb :signup
@@ -68,14 +75,18 @@ get "/signup" do
 end
 
 
-#bug
+#------------------------------------------------------------------------------
+#                    Sending the first msg after sign up
+#------------------------------------------------------------------------------
 post "/signup" do
   # we'll add some code here
 	# code to check parameters
 	client = Twilio::REST::Client.new ENV["TWILIO_ACCOUNT_SID"], ENV["TWILIO_AUTH_TOKEN"]
 
 	# Include a message here
-	 message = "Hi" + params[:first_name] + ", welcome to MeBot! I can respond to who, what, where, when and why. If you're stuck, type help."
+	 message = "Hi" + params[:first_name] + ", welcome to YesNo Bot! I am here to help you make a decision！ Ask me by texting
+	 [who], [what], [where], [why] to learn about me and how to use me. If you already know what you are going for,
+	 text [random] to get the answer you want!"
 
 	# this will send a message from any end point
 	client.api.account.messages.create(
@@ -83,35 +94,23 @@ post "/signup" do
 		to: params[:number],
 		body: message
 	)
-	# response if eveything is OK
+	# response if eveything is OK on the web page
 	"You're signed up. You'll receive a text message in a few minutes from the bot. "
 
-	# if params[:code] == code
-	# 	if params[:name]=="" || params[:number]==""
-  #     "Your information is incompelete, please input again!"
-  #   else
-  #     session[:name] = params['first_name']
-  #     session[:number] = params['number']
-  #     session[:visits] = 0
-  #     time = Time.now
-  #     "Welcome! #{session[:name]}! My app dose Blablablabla.
-  #     You will receive a text message in a few minutes from the bot."
-  #   end
-  # else
-  #   403
-  # end
-end
-########################### bug part 7 #######################################
 
 
 
+#------------------------------------------------------------------------------
+#                                 Main:
+#               first time greeting + formatting final output
+#------------------------------------------------------------------------------
 get "/sms/incoming" do
   session["counter"] ||= 1
-  body = params[:Body] || "hiiiiiiiii"
+  body = params[:Body] || "Hello!"
 	sender = "Qicheng"
 
   if session["counter"] == 1
-     message = "Thanks for your first message. From #{sender} saying #{body}"
+     message = "Thanks for your first message. From #{sender} :)"
     # media = "https://media.giphy.com/media/13ZHjidRzoi7n2/giphy.gif"
 		media = "https://media.giphy.com/media/5GdhgaBpA3oCA/giphy.gif"
   else
@@ -122,6 +121,9 @@ get "/sms/incoming" do
   end
 
 
+	#------------------------------------------------------------------------------
+	#                           Twillio package
+	#------------------------------------------------------------------------------
 	# Build a twilio response object
   twiml = Twilio::TwiML::MessagingResponse.new do |r|
     r.message do |m|
@@ -146,7 +148,9 @@ get "/sms/incoming" do
 end
 
 
-
+#------------------------------------------------------------------------------
+#                            Testing endpoints
+#------------------------------------------------------------------------------
 get "/test/conversation" do
 	#set 2 expected variables
 	body = params[:Body]
@@ -160,41 +164,28 @@ get "/test/conversation" do
 	end
 end
 
-# get  "/rick" do
-# 	episodes = Rickmorty::Episode.new
-# 	episodes.all
-# 	api_url = 'https://rickandmortyapi.com/api/character'
-# 	response = HTTParty.get( api_url )
-#
-# 	response["page"].to_json
-#
-# 	characters = response['results']
-# 	character = characters.['name']
-#
-# 	character
-#
-#
-# end
 
-
-
-
+#------------------------------------------------------------------------------
+#                           Method of all responses
+#------------------------------------------------------------------------------
 def determine_response body
 	#normalize and clean the string
 		body = body.downcase.strip
 
 		if body == "hi"
-			return "This bot is a nice bot!"
+			return "Hi! You are finally here!"
 		elsif body == "who"
-			return "I am MeBot"
+			return "I am YesNo Bot created by Qicheng Yang (QC). Want to know more about my creator? Text me [fact]!"
 		elsif body == "what" || body == "help"
-			return "The bot can be used to ask basic things about you"
+			return "I only do one thing - help you make a decision. Think about a yes or no question in mind, and I will
+			draw a card for you. If it is an even number, it means YES; odd number, means NO. Wanna try? Text [ready]!"
 		elsif body == "where"
-			return "You're in Pittsburgh"
+			return "My creator QC and I reside in Pittsburgh at this very moment!"
 		elsif body == "when"
-			return "I was made made in Fall 2018."
+			return "When I was born? I am actually very young! Just born in fall 2018."
 		elsif body == "why"
-			return "I was made for a class project in this class"
+			return "Don't you think making a decision can be hard sometimes? This is why I am here to help. Text [ready] if you are. Or text [what]
+			to learn how to use me."
 		elsif body == "joke" #request for a joke
 			array_of_lines = IO.readlines("jokes.txt")
 			#display a random joke on the browser
@@ -213,7 +204,7 @@ def determine_response body
 				status = "Feel free to talk to me!"
 			end
 			return  status
-		elsif body == "random"
+		elsif body == "ready"
 			response  = HTTParty.get('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1')
 			deck_id = response['deck_id']
 			response = HTTParty.get('https://deckofcardsapi.com/api/deck/' + deck_id + '/draw/?count=1')
