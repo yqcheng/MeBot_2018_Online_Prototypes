@@ -108,7 +108,7 @@ get "/sms/incoming" do
 	sender = "Qicheng"
 
   if session["counter"] == 1
-     message = "Thanks for your first message. I am here to help you make a decision！ Ask me by texting [who], [what], [where], [why] to learn about me and how to use me. If you already know what you are going for, text [random] to get the answer you want! :)"
+     message = "Thanks for your first message. I am here to help you make a decision！ Ask me by texting [who], [what], [where], [why] to learn about me and how to use me. If you already know what you are going for, text [ready] to get the answer you want! :)"
     # media = "https://media.giphy.com/media/13ZHjidRzoi7n2/giphy.gif"
 		media = "https://media.giphy.com/media/5GdhgaBpA3oCA/giphy.gif"
   else
