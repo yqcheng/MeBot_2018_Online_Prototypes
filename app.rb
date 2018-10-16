@@ -4,6 +4,9 @@ require 'rickmorty'
 require 'httparty'
 require 'giphy'
 require 'net/http' #emotion API library
+require 'parseconfig'
+require 'rest-client'
+require 'themoviedb-api'
 
 greetings = ["Hi", "Hello", "What up", "Yo"]
 morning = ["Morning", "Good morning"]
@@ -105,6 +108,7 @@ end
 #------------------------------------------------------------------------------
 get "/sms/incoming" do
   session["counter"] ||= 1
+  imageEmotion = 'empty'
   body = params[:Body] || "Hello!"
 	sender = "Qicheng"
 
@@ -163,73 +167,67 @@ get "/test/conversation" do
 end
 
 #------------------------------------------------------------------------------
-#                            Emotion API
+#                            FACE API
 #------------------------------------------------------------------------------
 # Note: You must use the same region in your REST call as you used to obtain your subscription keys.
 #   For example, if you obtained your subscription keys from westcentralus, replace "westus" in the
 #   URL below with "westcentralus".
-uri = URI('https://westcentralus.api.cognitive.microsoft.com/face/v1.0')
-uri.query = URI.encode_www_form({
-})
 
-request = Net::HTTP::Post.new(uri.request_uri)
-# Request headers
-request['Content-Type'] = 'application/json'
-# Note: Replace the "Ocp-Apim-Subscription-Key" value with a valid subscription key.
-request['Ocp-Apim-Subscription-Key'] = '74e4615ad75b40179c0cca590c66615c'
-# Request body
-request.body = "{\"url\":\"http://example.com/1.jpg\"}"
+# You must use the same location in your REST call as you used to get your
+# subscription keys. For example, if you got your subscription keys from  westus,
+# replace "westcentralus" in the URL below with "westus".
 
-response = Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') do |http|
-    http.request(request)
-end
+  uri = URI('https://westcentralus.api.cognitive.microsoft.com/face/v1.0')
+  uri.query = URI.encode_www_form({
+      # Request parameters
+      'returnFaceId' => 'true',
+      'returnFaceLandmarks' => 'false',
+      'returnFaceAttributes' => 'age,gender,headPose,smile,facialHair,glasses,' +
+          'emotion,hair,makeup,occlusion,accessories,blur,exposure,noise'
+  })
 
-puts response.body
+  request = Net::HTTP::Post.new(uri.request_uri)
+
+  # Request headers
+  # Replace <Subscription Key> with your valid subscription key.
+  request['Ocp-Apim-Subscription-Key'] = '74e4615ad75b40179c0cca590c66615c'
+  request['Content-Type'] = 'application/json'
+
+  imageUri = "https://upload.wikimedia.org/wikipedia/commons/3/37/Dagestani_man_and_woman.jpg"
+  request.body = "{\"url\": \"" + imageUri + "\"}"
+
+  response = Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') do |http|
+      http.request(request)
+  end
+
+  puts response.body
+
 
 #------------------------------------------------------------------------------
 #                           Method of all responses
 #------------------------------------------------------------------------------
 def determine_response body
 	#normalize and clean the string
-		body = body.downcase.strip
+  body = body.downcase.strip
 
-		if body == "hi" || body == "hello"
-			return "Hi! You are finally here!"
-		elsif body == "who"
-			return "I am YesNo Bot created by Qicheng Yang (QC). Want to know more about my creator? Text me [fact]!"
-		elsif body == "what" || body == "help"
-			return "I only do one thing - help you make a decision. Think about a yes or no question in mind, and I will draw a card for you. If it is an even number, it means YES; odd number, means NO. Wanna try? Text [ready]!"
-		elsif body == "where"
-			return "My creator QC and I reside in Pittsburgh at this very moment!"
-		elsif body == "when"
-			return "When I was born? I am actually very young! Just born in fall 2018."
-		elsif body == "why"
-			return "Don't you think making a decision can be hard sometimes? This is why I am here to help. Text [ready] if you are. Or text [what]
-			to learn how to use me."
-		elsif body == "joke" #request for a joke
-			array_of_lines = IO.readlines("jokes.txt")
-			#display a random joke on the browser
-			return "Here you go: " + array_of_lines.sample
-		elsif body == "fact" #tell a fact about me
-			fun_fact = IO.readlines("facts.txt")
-			return fun_fact.sample
-		elsif body == "lol" || body == "haha"
-			return "Funny right?"
-		elsif body == "time"
-			time = Time.now
-			hour = time.hour
-			if hour > 0 && hour < 16
-				status = "I am busy either studying or sleeping!"
-			else
-				status = "Feel free to talk to me!"
-			end
-			return  status
-		elsif body == "ready"
-			response  = HTTParty.get('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1')
-			deck_id = response['deck_id']
-			response = HTTParty.get('https://deckofcardsapi.com/api/deck/' + deck_id + '/draw/?count=1')
-			media = response["cards"][0]["image"]
-		end
+  Tmdb::Api.key("aa73605e3dfbc5266697038b580c3678")
+
+  if body.include? comedy || body.include? happy
+    response = Tmdb::Genre.movies(35)
+
+  elsif body.include? drama || body.include? sad
+    response = Tmdb::Genre.movies(18)
+
+  elsif body == 'yes'
+    number = rand(19)
+
+  end
+
+    title = response['results'][number]["original_title"]
+    poster = response['results'][number]["poster"]
+
+  media = 'https://image.tmdb.org/t/p/w1280' + poster
+  message = 'One option I have for you is ' + title + '.'
 end
 
 
