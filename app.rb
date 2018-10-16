@@ -3,6 +3,7 @@ require 'twilio-ruby'
 require 'rickmorty'
 require 'httparty'
 require 'giphy'
+require 'net/http' #emotion API library
 
 greetings = ["Hi", "Hello", "What up", "Yo"]
 morning = ["Morning", "Good morning"]
@@ -161,6 +162,29 @@ get "/test/conversation" do
 	end
 end
 
+#------------------------------------------------------------------------------
+#                            Emotion API
+#------------------------------------------------------------------------------
+# Note: You must use the same region in your REST call as you used to obtain your subscription keys.
+#   For example, if you obtained your subscription keys from westcentralus, replace "westus" in the
+#   URL below with "westcentralus".
+uri = URI('https://westcentralus.api.cognitive.microsoft.com/face/v1.0')
+uri.query = URI.encode_www_form({
+})
+
+request = Net::HTTP::Post.new(uri.request_uri)
+# Request headers
+request['Content-Type'] = 'application/json'
+# Note: Replace the "Ocp-Apim-Subscription-Key" value with a valid subscription key.
+request['Ocp-Apim-Subscription-Key'] = '74e4615ad75b40179c0cca590c66615c'
+# Request body
+request.body = "{\"url\":\"http://example.com/1.jpg\"}"
+
+response = Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') do |http|
+    http.request(request)
+end
+
+puts response.body
 
 #------------------------------------------------------------------------------
 #                           Method of all responses
