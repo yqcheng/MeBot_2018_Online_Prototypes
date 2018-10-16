@@ -29,6 +29,10 @@ end
 
 
 
+
+
+
+
 #------------------------------------------------------------------------------
 #                         Basic endpoints on web
 #------------------------------------------------------------------------------
@@ -212,13 +216,13 @@ def determine_response body
 
   Tmdb::Api.key("aa73605e3dfbc5266697038b580c3678")
 
-  if body.include? comedy || body.include? happy
+  if body.include? 'comedy' || body.include? 'happy'
     response = Tmdb::Genre.movies(35)
 
-  elsif body.include? drama || body.include? sad
+  elsif body.include? 'drama' || body.include? 'sad'
     response = Tmdb::Genre.movies(18)
 
-  elsif body == 'yes'
+  elsif body = 'yes'
     number = rand(19)
 
   end
@@ -227,7 +231,7 @@ def determine_response body
     poster = response['results'][number]["poster"]
 
   media = 'https://image.tmdb.org/t/p/w1280' + poster
-  message = 'One option I have for you is ' + title + '.'
+  message = 'One option I have for you is ' + title + '. If you want another option, type [yes].'
 end
 
 
