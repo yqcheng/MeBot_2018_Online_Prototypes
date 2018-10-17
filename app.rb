@@ -129,7 +129,7 @@ get "/sms/incoming" do
       message, media = determine_response body
 
     else
-      message, media = dcall_face_api
+      message, media = call_face_api media_url
     end
 
   end
@@ -190,7 +190,7 @@ end
 # subscription keys. For example, if you got your subscription keys from  westus,
 # replace "westcentralus" in the URL below with "westus".
 
-def call_face_api
+def call_face_api media_url
 
   uri = URI('https://westcentralus.api.cognitive.microsoft.com/face/v1.0/detect')
   uri.query = URI.encode_www_form({
