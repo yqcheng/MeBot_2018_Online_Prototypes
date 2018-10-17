@@ -373,7 +373,7 @@ Send me a selfie and I will find a movie for your mood today! Or text me with yo
       end
 
       media = 'https://image.tmdb.org/t/p/w1280' + poster.to_s
-      message = '-
+      message = '- 
 Gotcha! One option I have for you is ' + title + '.
 
 Rating: ' + rating.to_s + '/10
