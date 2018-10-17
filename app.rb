@@ -27,12 +27,6 @@ configure :development do
   Dotenv.load
 end
 
-
-
-
-
-
-
 #------------------------------------------------------------------------------
 #                         Basic endpoints on web
 #------------------------------------------------------------------------------
@@ -60,12 +54,10 @@ get "/about" do
 
 
 	if session[:first_name].nil?
-		greet + " new friend! My YesNo Bot is a minimal-interface to help you make a decision by
-		 drawing a poker card for you. <br/>You have visited " + session["visits"].to_s +
+		greet + " new friend! I am Movie Eva, I can give you some movie recommendations if you send me a seflie or text me with keywords I give you! <br/>You have visited " + session["visits"].to_s +
 		" times as of " + time.to_s
 	else
-		greet + " " + session[:first_name] + "! My MeBot is a minimal-interface bot who tells you about the weather today and
-		clothes recommendation. <br/>You have visited " + session["visits"].to_s +
+		greet + " " + session[:first_name] + "I am Movie Eva, I can give you some movie recommendations if you send me a seflie or text me with keywords I give you! <br/>You have visited " + session["visits"].to_s +
 		" times as of " + time.to_s
 	end
 end
@@ -92,7 +84,7 @@ post "/signup" do
 	client = Twilio::REST::Client.new ENV["TWILIO_ACCOUNT_SID"], ENV["TWILIO_AUTH_TOKEN"]
 
 	# Include a message here
-	 message = "Hi " + params[:first_name] + ", I am YesNo Bot! Are you curious about me? Say hi to me!"
+	 message = "Hi " + params[:first_name] + ", I am Movie Eva! Are you curious about me? Say hi to me!"
 
 	# this will send a message from any end point
 	client.api.account.messages.create(
@@ -119,9 +111,9 @@ get "/sms/incoming" do
   media_url = params[:MediaUrl0] || "none"
 
   if session["counter"] == 1
-     message = "Thanks for your first message. I am here to help you find a movie！ Ask me for a movie by texting a genre or feeling you want."
+     message = "Thanks for your first message. I am here to help you find a movie ! Ask me for a movie by texting a genre or your feeling."
     # media = "https://media.giphy.com/media/13ZHjidRzoi7n2/giphy.gif"
-		media = "https://media.giphy.com/media/5GdhgaBpA3oCA/giphy.gif"
+		media = "https://media.giphy.com/media/rMDszhcRpjEas/giphy.gif"
   else
 
 
