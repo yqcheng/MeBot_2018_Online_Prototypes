@@ -220,42 +220,65 @@ def call_face_api media_url
   searchEmotion = emotions.max_by{|k,v| v}[0]
 
   if searchEmotion == "happiness"
-    response = Tmdb::Genre.movies(35)
+    response = Tmdb::Genre.movies(12)
+    response2 = Tmdb::Genre.movies(10749)
     feeling = "happy"
-    puts 'selecting a comedy'
+    puts 'selecting a adventure or romance'
   elsif searchEmotion == "sadness"
     response = Tmdb::Genre.movies(18)
+    response2 = Tmdb::Genre.movies(35)
     feeling = "sad"
-    puts 'selecting a drama'
+    puts 'selecting a drama or comedy'
   elsif searchEmotion == "neutral"
-    response = Tmdb::Genre.movies(53)
+    response = Tmdb::Genre.movies(14)
+    response2 = Tmdb::Genre.movies(878)
     feeling = "bored"
-    puts 'selecting a thriller'
+    puts 'selecting a scifi or fantasy'
   elsif searchEmotion == "anger"
     response = Tmdb::Genre.movies(28)
-    feeling = "angry"
-    puts 'selecting a action'
+    response2 = Tmdb::Genre.movies(80)
+    feeling = "pissed"
+    puts 'selecting a action or crime'
   elsif searchEmotion == "surprise"
-    response = Tmdb::Genre.movies(18)
-    feeling = "sad"
-    puts 'selecting a drama'
-  elsif searchEmotion == "neutral"
     response = Tmdb::Genre.movies(53)
-    feeling = "bored"
-    puts 'selecting a thriller'
-  elsif searchEmotion == "anger"
-    response = Tmdb::Genre.movies(28)
-    feeling = "angry"
-    puts 'selecting a action'
+    response2 = Tmdb::Genre.movies(9648)
+    feeling = "surprised"
+    puts 'selecting a thriller or mystery'
+  elsif searchEmotion == "fear"
+    response = Tmdb::Genre.movies(10770)
+    response2 = Tmdb::Genre.movies(10402)
+    feeling = "concerned"
+    puts 'selecting a music or tv movie'
+  elsif searchEmotion == "disgust"
+    response = Tmdb::Genre.movies(16)
+    response2 = Tmdb::Genre.movies(10751)
+    feeling = "bothered"
+    puts 'selecting an animation or family'
+  elsif searchEmotion == "contempt"
+    response = Tmdb::Genre.movies(99)
+    response2 = Tmdb::Genre.movies(36)
+    feeling = "to have an attitude"
+    puts 'selecting a documentary or history'
 
   end
 
-  number = rand(19)
+  puts "THIS IS THE RANDOM NUMBER --------------"
+  puts number_even_odd = rand(2) #a random number for choosing even or odd
+  puts number = rand(19)#number of choices in each genre list
 
-  title = response['results'][number]["original_title"]
-  poster = response['results'][number]["poster_path"]
-  overview = response['results'][number]["overview"]
-  rating = response['results'][number]["vote_average"]
+  if number_even_odd % 2 == 0
+    puts response.results[number]
+    title = response['results'][number]["original_title"]
+    poster = response['results'][number]["poster_path"]
+    overview = response['results'][number]["overview"]
+    rating = response['results'][number]["vote_average"]
+  else
+    puts response2.results[number]
+    title = response2['results'][number]["original_title"]
+    poster = response2['results'][number]["poster_path"]
+    overview = response2['results'][number]["overview"]
+    rating = response2['results'][number]["vote_average"]
+  end
 
   media = 'https://image.tmdb.org/t/p/w1280' + poster
   message = '-
@@ -300,7 +323,7 @@ def determine_response body
     response = Tmdb::Genre.movies(53)
     response2 = Tmdb::Genre.movies(9648)
   elsif body.include?( "music" )|| body.include?( "tv movie" )||body.include?( "afraid")|| body.include?( "scared")|| body.include?( "movie")|| body.include?( "musical")|| body.include?( "fear")
-    response = Tmdb::Genre.movies(53)
+    response = Tmdb::Genre.movies(10770)
     response2 = Tmdb::Genre.movies(10402)
   elsif body.include?( "animation" )|| body.include?( "family" )||body.include?( "disgusted")|| body.include?( "animate")|| body.include?( "cartoon")
     response = Tmdb::Genre.movies(16)
@@ -312,7 +335,7 @@ def determine_response body
     response = "end"
   elsif body.include?( "thanks" )|| body.include?( "thank you" )||body.include?( "appreciate")
     response = "thanks"
-  elsif body.include?( "how" )|| body.include?( "help" )||body.include?( "what")
+  elsif body.include?( "how" )||body.include?( "what")
     response = "help"
   end
     puts "THIS IS THE RANDOM NUMBER --------------"
@@ -320,14 +343,18 @@ def determine_response body
     puts number = rand(19)#number of choices in each genre list
 
     if response.nil?
-      message = "I hope you found what you want today! You know I am always here if you want some movie recommendations. Just ask me [how] if you are intersted!"
-      media = "https://media.giphy.com/media/rMDszhcRpjEas/giphy.gif"
+      message = "
+I hope you found what you want today! You know I am always here if you want some movie recommendations. Just ask me [how] if you are intersted!"
+      media = "https://media.giphy.com/media/11mcfSXgEAcrKg/giphy.gif"
     elsif response == "end"
-      message = "I hope you found what you want today! See you later~"
+      message = "
+I hope you found what you want today! See you later~"
     elsif response == "thanks"
-      message = "Aww you are welcome! Glad that I could help!"
+      message = "
+Aww you are welcome! Glad that I could help!"
     elsif response == "help"
-      message = "Send me a selfie and I will find a movie for your mood today! Or text me with your current feeling like [happy][bored][upset] or genre types like [comedy][action]. "
+      message = "
+Send me a selfie and I will find a movie for your mood today! Or text me with your current feeling like [happy][bored][upset] or genre types like [comedy][action]. "
     else
       if number_even_odd % 2 == 0
         puts response.results[number]
