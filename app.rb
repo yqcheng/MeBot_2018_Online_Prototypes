@@ -240,7 +240,7 @@ def call_face_api media_url
   message = '
 You look ' + feeling + ' today! One option I have for you is ' + title + '.
 
-Rating:' + rating + '/10
+Rating:' + rating.to_s + '/10
 
 Overview: ' + overview + '
 
@@ -279,9 +279,11 @@ def determine_response body
 
     title = response['results'][number]["original_title"]
     poster = response['results'][number]["poster_path"]
+    overview = response['results'][number]["overview"]
+    rating = response['results'][number]["vote_average"]
 
     media = 'https://image.tmdb.org/t/p/w1280' + poster.to_s
-    message = 'One option I have for you is ' + title + '. If you want another option, type [yes].'
+    message = 'One option I have for you is ' + title + '. Rating:' + rating.to_s + '/10. Overview: ' + overview + 'If you want another option, type [yes].'
     return message, media
 end
 
