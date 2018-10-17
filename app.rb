@@ -237,10 +237,10 @@ def call_face_api media_url
   rating = response['results'][number]["vote_average"]
 
   media = 'https://image.tmdb.org/t/p/w1280' + poster
-  message = '
+  message = '-
 You look ' + feeling + ' today! One option I have for you is ' + title + '.
 
-Rating:' + rating.to_s + '/10
+Rating: ' + rating.to_s + '/10
 
 Overview: ' + overview + '
 
