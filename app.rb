@@ -220,6 +220,7 @@ def call_face_api media_url
 
   if searchEmotion == "happiness"
     response = Tmdb::Genre.movies(35)
+    feeling = "happy"
     puts 'selecting a comedy'
 
   elsif searchEmotion == "sadness"
@@ -234,7 +235,7 @@ def call_face_api media_url
   poster = response['results'][number]["poster_path"]
 
   media = 'https://image.tmdb.org/t/p/w1280' + poster
-  message = 'You One option I have for you is ' + title + '. If you want another option, type [yes].'
+  message = 'You look ' + feeling + ' today! One option I have for you is ' + title + '. If you want another option, type [yes].'
 
   return message, media
 
