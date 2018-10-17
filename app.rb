@@ -284,34 +284,58 @@ def determine_response body
 
   Tmdb::Api.key("aa73605e3dfbc5266697038b580c3678")
 
-  if body.include?( "comedy") || body.include?("happy")
-    response = Tmdb::Genre.movies(35) #35 is the ID for comedy
-
-  elsif body.include?( "drama" )|| body.include?( "sad")
+  if body.include?( "adventure") || body.include?("romance") || body.include?("happy") || body.include?("happiness") || body.include?("excited") || body.include?("yes") 
+    response = Tmdb::Genre.movies(12)
+    response2 = Tmdb::Genre.movies(10749)
+  elsif body.include?( "drama" )|| body.include?( "comedy" )||body.include?( "sad")|| body.include?( "down")|| body.include?( "not good")|| body.include?( "bad")|| body.include?( "don't feel good")
     response = Tmdb::Genre.movies(18)
-
-  elsif body == 'yes'
-
+    response2 = Tmdb::Genre.movies(35)
+  elsif body.include?( "action" )|| body.include?( "crime" )||body.include?( "anger")|| body.include?( "angry")|| body.include?( "furious")|| body.include?( "outrage")|| body.include?( "mad")|| body.include?( "upset")
+    response = Tmdb::Genre.movies(28)
+    response2 = Tmdb::Genre.movies(80)
+  elsif body.include?( "fantasy" )|| body.include?( "Science Fiction" )||body.include?( "neutral")|| body.include?( "bored")|| body.include?( "fine")|| body.include?( "nothing")|| body.include?( "okay")|| body.include?( "so so")
+    response = Tmdb::Genre.movies(14)
+    response2 = Tmdb::Genre.movies(878)
+  elsif body.include?( "thriller" )|| body.include?( "mystery" )||body.include?( "surprised")|| body.include?( "suprising")|| body.include?( "unexpected")|| body.include?( "unusual")|| body.include?( "different")
+    response = Tmdb::Genre.movies(53)
+    response2 = Tmdb::Genre.movies(9648)
+  elsif body.include?( "music" )|| body.include?( "tv movie" )||body.include?( "afraid")|| body.include?( "scared")|| body.include?( "movie")|| body.include?( "musical")|| body.include?( "fear")
+    response = Tmdb::Genre.movies(53)
+    response2 = Tmdb::Genre.movies(10402)
+  elsif body.include?( "animation" )|| body.include?( "family" )||body.include?( "disgusted")|| body.include?( "animate")|| body.include?( "cartoon")
+    response = Tmdb::Genre.movies(16)
+    response2 = Tmdb::Genre.movies(10751)
+  elsif body.include?( "documentary" )|| body.include?( "history" )||body.include?( "contempt")|| body.include?( "historical")|| body.include?( "ancient")
+    response = Tmdb::Genre.movies(99)
+    response2 = Tmdb::Genre.movies(36)
   end
+    puts "THIS IS THE RANDOM NUMBER --------------"
+    puts number_even_odd = rand(2) #a random number for choosing even or odd
+    puts number = rand(19)#number of choices in each genre list
 
-    number = rand(19)
-
-    puts response.results[number]
-
-    title = response['results'][number]["original_title"]
-    poster = response['results'][number]["poster_path"]
-    overview = response['results'][number]["overview"]
-    rating = response['results'][number]["vote_average"]
+    if number_even_odd % 2 == 0
+      puts response.results[number]
+      title = response['results'][number]["original_title"]
+      poster = response['results'][number]["poster_path"]
+      overview = response['results'][number]["overview"]
+      rating = response['results'][number]["vote_average"]
+    else
+      puts response2.results[number]
+      title = response2['results'][number]["original_title"]
+      poster = response2['results'][number]["poster_path"]
+      overview = response2['results'][number]["overview"]
+      rating = response2['results'][number]["vote_average"]
+    end
 
     media = 'https://image.tmdb.org/t/p/w1280' + poster.to_s
     message = '-
-  Gotcha! One option I have for you is ' + title + '.
+Gotcha! One option I have for you is ' + title + '.
 
-  Rating: ' + rating.to_s + '/10
+Rating: ' + rating.to_s + '/10
 
-  Overview: ' + overview + '
+Overview: ' + overview + '
 
-  If you want another option, type [yes].'
+If you want another option, type [yes].'
 
     return message, media
 end
