@@ -192,6 +192,8 @@ end
 
 def call_face_api media_url
 
+  Tmdb::Api.key("aa73605e3dfbc5266697038b580c3678")
+
   uri = URI('https://westcentralus.api.cognitive.microsoft.com/face/v1.0/detect')
   uri.query = URI.encode_www_form({
       # Request parameters
