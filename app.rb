@@ -173,7 +173,7 @@ get "/test/conversation" do
 end
 
 #------------------------------------------------------------------------------
-#                    FACE API Method by sending a picture
+#                    FACE API Method for sending a picture
 #------------------------------------------------------------------------------
 # Note: You must use the same region in your REST call as you used to obtain your subscription keys.
 #   For example, if you obtained your subscription keys from westcentralus, replace "westus" in the
@@ -296,7 +296,7 @@ If you want another option, type [yes].'
 end
 
 #------------------------------------------------------------------------------
-#                         Method by texting keywords
+#                         Method for texting keywords
 #------------------------------------------------------------------------------
 def determine_response body
 	#normalize and clean the string
@@ -343,18 +343,18 @@ def determine_response body
     puts number = rand(19)#number of choices in each genre list
 
     if response.nil?
-      message = "
-I hope you found what you want today! You know I am always here if you want some movie recommendations. Just ask me [how] if you are intersted!"
+      message = '
+I hope you found what you want today! You know I am always here if you want some movie recommendations. Just ask me [how] if you are interested!'
       media = "https://media.giphy.com/media/11mcfSXgEAcrKg/giphy.gif"
     elsif response == "end"
-      message = "
-I hope you found what you want today! See you later~"
+      message = '
+I hope you found what you want today! See you later~'
     elsif response == "thanks"
-      message = "
-Aww you are welcome! Glad that I could help!"
+      message = '
+Aww you are welcome! Glad that I could help!'
     elsif response == "help"
-      message = "
-Send me a selfie and I will find a movie for your mood today! Or text me with your current feeling like [happy][bored][upset] or genre types like [comedy][action]. "
+      message = '
+Send me a selfie and I will find a movie for your mood today! Or text me with your current feeling like [happy][bored][upset] or genre types like [comedy][action]. '
     else
       if number_even_odd % 2 == 0
         puts response.results[number]
