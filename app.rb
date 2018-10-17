@@ -115,14 +115,20 @@ get "/sms/incoming" do
   imageEmotion = 'empty'
   body = params[:Body] || "Hello!"
 	sender = "Qicheng"
+  media_content = params[:MediaContentType0] || "none"
+  media_url = params[:MediaUrl0] || "none"
 
   if session["counter"] == 1
      message = "Thanks for your first message. I am here to help you find a movie！ Ask me for a movie by texting a genre or feeling you want."
     # media = "https://media.giphy.com/media/13ZHjidRzoi7n2/giphy.gif"
 		media = "https://media.giphy.com/media/5GdhgaBpA3oCA/giphy.gif"
   else
-		message = determine_response body
 
+    if media_url == "none"
+      determine_response body
+    else
+      call_face_api
+    end
 
   end
 
@@ -181,34 +187,58 @@ end
 # subscription keys. For example, if you got your subscription keys from  westus,
 # replace "westcentralus" in the URL below with "westus".
 
-# def call_face_api
-#
-#   uri = URI('https://westcentralus.api.cognitive.microsoft.com/face/v1.0')
-#   uri.query = URI.encode_www_form({
-#       # Request parameters
-#       'returnFaceId' => 'true',
-#       'returnFaceLandmarks' => 'false',
-#       'returnFaceAttributes' => 'age,gender,headPose,smile,facialHair,glasses,' +
-#           'emotion,hair,makeup,occlusion,accessories,blur,exposure,noise'
-#   })
-#
-#   request = Net::HTTP::Post.new(uri.request_uri)
-#
-#   # Request headers
-#   # Replace <Subscription Key> with your valid subscription key.
-#   request['Ocp-Apim-Subscription-Key'] = '74e4615ad75b40179c0cca590c66615c'
-#   request['Content-Type'] = 'application/json'
-#
-#   imageUri = "https://upload.wikimedia.org/wikipedia/commons/3/37/Dagestani_man_and_woman.jpg"
-#   request.body = "{\"url\": \"" + imageUri + "\"}"
-#
-#   response = Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') do |http|
-#       http.request(request)
-#   end
-#
-#   puts response.body
-#
-# end
+def call_face_api
+
+  uri = URI('https://westcentralus.api.cognitive.microsoft.com/face/v1.0/detect')
+  uri.query = URI.encode_www_form({
+      # Request parameters
+      'returnFaceId' => 'true',
+      'returnFaceLandmarks' => 'false',
+      'returnFaceAttributes' => 'age,gender,headPose,smile,facialHair,glasses,' +
+          'emotion,hair,makeup,occlusion,accessories,blur,exposure,noise'
+  })
+
+  request = Net::HTTP::Post.new(uri.request_uri)
+
+  # Request headers
+  # Replace <Subscription Key> with your valid subscription key.
+  request['Ocp-Apim-Subscription-Key'] = '74e4615ad75b40179c0cca590c66615c'
+  request['Content-Type'] = 'application/json'
+
+  imageUri = media_url
+  request.body = "{\"url\": \"" + imageUri + "\"}"
+
+  response = Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') do |http|
+      http.request(request)
+  end
+
+  puts "RESPONSE = "
+  puts response.body
+
+  json = JSON.parse( response.body )
+
+  emotions = json.first["faceAttributes"]["emotion"]
+
+  searchEmotion = emotions.max_by{|k,v| v}[0]
+
+  if searchEmotion == "happiness"
+    response = Tmdb::Genre.movies(35)
+    puts 'selecting a comedy'
+
+  elsif seachEmotion == "sadness"
+    response = Tmdb::Genre.movies(18)
+    puts 'selecting a drama'
+
+  end
+  number = rand(19)
+  title = response['results'][number]["original_title"]
+  poster = response['results'][number]["poster_path"]
+
+  media = 'https://image.tmdb.org/t/p/w1280' + poster
+  message = 'One option I have for you is ' + title + '. If you want another option, type [yes].'
+
+
+end
 
 #------------------------------------------------------------------------------
 #                           Method of all responses
@@ -217,26 +247,29 @@ def determine_response body
 	#normalize and clean the string
   body = body.downcase.strip
 
+  # value = call_face_api
+  # puts "Highest Emotion is #{value}"
+
   Tmdb::Api.key("aa73605e3dfbc5266697038b580c3678")
 
-  if body.include?( "comedy") || body.include?("happy")
+  number = rand(19)
 
+  if body.include?( "comedy") || body.include?("happy")
     response = Tmdb::Genre.movies(35) #35 is the ID for comedy
-    number = rand(19)
 
   elsif body.include?( "drama" )|| body.include?( "sad")
     response = Tmdb::Genre.movies(18)
-    number = rand(19)
 
   elsif body == 'yes'
-    number = rand(19)
 
   end
 
-    title = response['results'][number]["original_title"]
-    poster = response['results'][number]["poster"]
+    puts response.results[number]
 
-    media = 'https://image.tmdb.org/t/p/w1280' + poster
+    title = response['results'][number]["original_title"]
+    poster = response['results'][number]["poster_path"]
+
+    media = 'https://image.tmdb.org/t/p/w1280' + poster.to_s
     message = 'One option I have for you is ' + title + '. If you want another option, type [yes].'
 
 end
