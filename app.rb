@@ -124,10 +124,12 @@ get "/sms/incoming" do
 		media = "https://media.giphy.com/media/5GdhgaBpA3oCA/giphy.gif"
   else
 
+
     if media_url == "none"
-      determine_response body
+      message, media = determine_response body
+
     else
-      call_face_api
+      message, media = dcall_face_api
     end
 
   end
@@ -142,6 +144,7 @@ get "/sms/incoming" do
 
 			# add the text of the response
       m.body(message)
+      puts message
 
 			# add media if it is defined
       unless media.nil?
@@ -230,12 +233,16 @@ def call_face_api
     puts 'selecting a drama'
 
   end
+
   number = rand(19)
+
   title = response['results'][number]["original_title"]
   poster = response['results'][number]["poster_path"]
 
   media = 'https://image.tmdb.org/t/p/w1280' + poster
   message = 'One option I have for you is ' + title + '. If you want another option, type [yes].'
+
+  return message, media
 
 
 end
@@ -252,8 +259,6 @@ def determine_response body
 
   Tmdb::Api.key("aa73605e3dfbc5266697038b580c3678")
 
-  number = rand(19)
-
   if body.include?( "comedy") || body.include?("happy")
     response = Tmdb::Genre.movies(35) #35 is the ID for comedy
 
@@ -264,14 +269,16 @@ def determine_response body
 
   end
 
+    number = rand(19)
+
     puts response.results[number]
 
     title = response['results'][number]["original_title"]
     poster = response['results'][number]["poster_path"]
 
-    #media = 'https://image.tmdb.org/t/p/w1280' + poster.to_s
+    media = 'https://image.tmdb.org/t/p/w1280' + poster.to_s
     message = 'One option I have for you is ' + title + '. If you want another option, type [yes].'
-
+    return message, media
 end
 
 
