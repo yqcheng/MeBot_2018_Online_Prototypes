@@ -236,7 +236,7 @@ def call_face_api media_url
   overview = response['results'][number]["overview"]
 
   media = 'https://image.tmdb.org/t/p/w1280' + poster
-  message = 'You look ' + feeling + ' today! One option I have for you is ' + title + '. If you want another option, type [yes].\n' +
+  message = 'You look ' + feeling + ' today! One option I have for you is ' + title + '. If you want another option, type [yes].<br/><br/>' +
   "Overview: " + overview
 
   return message, media
