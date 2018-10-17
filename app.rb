@@ -112,7 +112,9 @@ get "/sms/incoming" do
 
   if session["counter"] == 1
      message = "-
-Thanks for your first message. I am Movie Eva. I can help you find a movie! Ask me for a movie by texting a genre or your feeling, or send me a selfie!"
+Thanks for your first message. I am Movie Eva. I can help you find a movie! Ask me for a movie by texting a genre or your feeling, or send me a selfie!
+
+You can always ask [how] for more help!"
     # media = "https://media.giphy.com/media/13ZHjidRzoi7n2/giphy.gif"
 		media = "https://media.giphy.com/media/Hajweqbuiwp20/giphy.gif"
   else
@@ -343,17 +345,17 @@ def determine_response body
     puts number = rand(19)#number of choices in each genre list
 
     if response.nil?
-      message = '
+      message = '-
 I hope you found what you want today! You know I am always here if you want some movie recommendations. Just ask me [how] if you are interested!'
       media = "https://media.giphy.com/media/11mcfSXgEAcrKg/giphy.gif"
     elsif response == "end"
-      message = '
+      message = '-
 I hope you found what you want today! See you later~'
     elsif response == "thanks"
-      message = '
+      message = '-
 Aww you are welcome! Glad that I could help!'
     elsif response == "help"
-      message = '
+      message = '-
 Send me a selfie and I will find a movie for your mood today! Or text me with your current feeling like [happy][bored][upset] or genre types like [comedy][action]. '
     else
       if number_even_odd % 2 == 0
