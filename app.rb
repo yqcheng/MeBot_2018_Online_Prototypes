@@ -234,11 +234,17 @@ def call_face_api media_url
   title = response['results'][number]["original_title"]
   poster = response['results'][number]["poster_path"]
   overview = response['results'][number]["overview"]
+  rating = response['results'][number]["vote_average"]
 
   media = 'https://image.tmdb.org/t/p/w1280' + poster
-  message = 'You look ' + feeling + ' today! One option I have for you is ' + title + '. If you want another option, type [yes].
+  message = '
+You look ' + feeling + ' today! One option I have for you is ' + title + '.
 
-  Overview: ' + overview
+Rating:' + rating + '/10
+
+Overview: ' + overview + '
+
+If you want another option, type [yes].'
 
   return message, media
 
