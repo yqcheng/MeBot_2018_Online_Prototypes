@@ -111,7 +111,8 @@ get "/sms/incoming" do
   media_url = params[:MediaUrl0] || "none"
 
   if session["counter"] == 1
-     message = "Thanks for your first message. I am here to help you find a movie ! Ask me for a movie by texting a genre or your feeling."
+     message = "-
+Thanks for your first message. I am here to help you find a movie ! Ask me for a movie by texting a genre or your feeling."
     # media = "https://media.giphy.com/media/13ZHjidRzoi7n2/giphy.gif"
 		media = "https://media.giphy.com/media/Hajweqbuiwp20/giphy.gif"
   else
@@ -172,7 +173,7 @@ get "/test/conversation" do
 end
 
 #------------------------------------------------------------------------------
-#                            FACE API
+#                    FACE API Method by sending a picture
 #------------------------------------------------------------------------------
 # Note: You must use the same region in your REST call as you used to obtain your subscription keys.
 #   For example, if you obtained your subscription keys from westcentralus, replace "westus" in the
@@ -222,10 +223,18 @@ def call_face_api media_url
     response = Tmdb::Genre.movies(35)
     feeling = "happy"
     puts 'selecting a comedy'
-
   elsif searchEmotion == "sadness"
     response = Tmdb::Genre.movies(18)
+    feeling = "sad"
     puts 'selecting a drama'
+  elsif searchEmotion == "neutral"
+    response = Tmdb::Genre.movies(53)
+    feeling = "bored"
+    puts 'selecting a thriller'
+  elsif searchEmotion == "anger"
+    response = Tmdb::Genre.movies(28)
+    feeling = "angry"
+    puts 'selecting a action'
 
   end
 
@@ -238,7 +247,7 @@ def call_face_api media_url
 
   media = 'https://image.tmdb.org/t/p/w1280' + poster
   message = '-
-You look ' + feeling + ' today! One option I have for you is ' + title + '.
+You seem ' + feeling + ' today! One option I have for you is ' + title + '.
 
 Rating: ' + rating.to_s + '/10
 
@@ -252,7 +261,7 @@ If you want another option, type [yes].'
 end
 
 #------------------------------------------------------------------------------
-#                           Method of all responses
+#                         Method by texting keywords
 #------------------------------------------------------------------------------
 def determine_response body
 	#normalize and clean the string
@@ -283,7 +292,15 @@ def determine_response body
     rating = response['results'][number]["vote_average"]
 
     media = 'https://image.tmdb.org/t/p/w1280' + poster.to_s
-    message = 'One option I have for you is ' + title + '. Rating:' + rating.to_s + '/10. Overview: ' + overview + 'If you want another option, type [yes].'
+    message = '-
+  You seem ' + feeling + ' today! One option I have for you is ' + title + '.
+
+  Rating: ' + rating.to_s + '/10
+
+  Overview: ' + overview + '
+
+  If you want another option, type [yes].'
+
     return message, media
 end
 
