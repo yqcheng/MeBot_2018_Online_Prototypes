@@ -307,13 +307,13 @@ def determine_response body
 
   Tmdb::Api.key("aa73605e3dfbc5266697038b580c3678")
 
-  if body.include?( "adventure") || body.include?("romance") || body.include?("happy") || body.include?("happiness") || body.include?("excited") || body.include?("yes")
+  if body.include?( "adventure") || body.include?("romance") || body.include?("happy") || body.include?("happiness") || body.include?("excited")
     response = Tmdb::Genre.movies(12)
     response2 = Tmdb::Genre.movies(10749)
-  elsif body.include?( "drama" )|| body.include?( "comedy" )||body.include?( "sad")|| body.include?( "down")|| body.include?( "not good")|| body.include?( "bad")|| body.include?( "don't feel good")
+  elsif body.include?( "drama" )|| body.include?( "comedy" )||body.include?( "sad")|| body.include?( "down")|| body.include?( "not good")|| body.include?( "bad")|| body.include?( "don't feel good")|| body.include?("yes")
     response = Tmdb::Genre.movies(18)
     response2 = Tmdb::Genre.movies(35)
-  elsif body.include?( "action" )|| body.include?( "crime" )||body.include?( "anger")|| body.include?( "angry")|| body.include?( "furious")|| body.include?( "outrage")|| body.include?( "mad")|| body.include?( "upset")
+  elsif body.include?( "action" )|| body.include?( "crime" )||body.include?( "anger")|| body.include?( "angry")|| body.include?( "furious")|| body.include?( "outrage")|| body.include?( "mad")|| body.include?( "upset")|| body.include?("sure")
     response = Tmdb::Genre.movies(28)
     response2 = Tmdb::Genre.movies(80)
   elsif body.include?( "fantasy" )|| body.include?( "Science Fiction" )||body.include?( "neutral")|| body.include?( "bored")|| body.include?( "fine")|| body.include?( "nothing")|| body.include?( "okay")|| body.include?( "so so")
