@@ -235,6 +235,18 @@ def call_face_api media_url
     response = Tmdb::Genre.movies(28)
     feeling = "angry"
     puts 'selecting a action'
+  elsif searchEmotion == "surprise"
+    response = Tmdb::Genre.movies(18)
+    feeling = "sad"
+    puts 'selecting a drama'
+  elsif searchEmotion == "neutral"
+    response = Tmdb::Genre.movies(53)
+    feeling = "bored"
+    puts 'selecting a thriller'
+  elsif searchEmotion == "anger"
+    response = Tmdb::Genre.movies(28)
+    feeling = "angry"
+    puts 'selecting a action'
 
   end
 
@@ -293,7 +305,7 @@ def determine_response body
 
     media = 'https://image.tmdb.org/t/p/w1280' + poster.to_s
     message = '-
-  You seem ' + feeling + ' today! One option I have for you is ' + title + '.
+  Gotcha! One option I have for you is ' + title + '.
 
   Rating: ' + rating.to_s + '/10
 
