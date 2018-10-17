@@ -112,7 +112,7 @@ get "/sms/incoming" do
 
   if session["counter"] == 1
      message = "-
-Thanks for your first message. I am here to help you find a movie ! Ask me for a movie by texting a genre or your feeling."
+Thanks for your first message. I am Movie Eva. I can help you find a movie! Ask me for a movie by texting a genre or your feeling, or send me a selfie!"
     # media = "https://media.giphy.com/media/13ZHjidRzoi7n2/giphy.gif"
 		media = "https://media.giphy.com/media/Hajweqbuiwp20/giphy.gif"
   else
@@ -284,7 +284,7 @@ def determine_response body
 
   Tmdb::Api.key("aa73605e3dfbc5266697038b580c3678")
 
-  if body.include?( "adventure") || body.include?("romance") || body.include?("happy") || body.include?("happiness") || body.include?("excited") || body.include?("yes") 
+  if body.include?( "adventure") || body.include?("romance") || body.include?("happy") || body.include?("happiness") || body.include?("excited") || body.include?("yes")
     response = Tmdb::Genre.movies(12)
     response2 = Tmdb::Genre.movies(10749)
   elsif body.include?( "drama" )|| body.include?( "comedy" )||body.include?( "sad")|| body.include?( "down")|| body.include?( "not good")|| body.include?( "bad")|| body.include?( "don't feel good")
@@ -308,27 +308,43 @@ def determine_response body
   elsif body.include?( "documentary" )|| body.include?( "history" )||body.include?( "contempt")|| body.include?( "historical")|| body.include?( "ancient")
     response = Tmdb::Genre.movies(99)
     response2 = Tmdb::Genre.movies(36)
+  elsif body.include?( "no" )|| body.include?( "end" )||body.include?( "stop")|| body.include?( "bye")
+    response = "end"
+  elsif body.include?( "thanks" )|| body.include?( "thank you" )||body.include?( "appreciate")
+    response = "thanks"
+  elsif body.include?( "how" )|| body.include?( "help" )||body.include?( "what")
+    response = "help"
   end
     puts "THIS IS THE RANDOM NUMBER --------------"
     puts number_even_odd = rand(2) #a random number for choosing even or odd
     puts number = rand(19)#number of choices in each genre list
 
-    if number_even_odd % 2 == 0
-      puts response.results[number]
-      title = response['results'][number]["original_title"]
-      poster = response['results'][number]["poster_path"]
-      overview = response['results'][number]["overview"]
-      rating = response['results'][number]["vote_average"]
+    if response.nil?
+      message = "I hope you found what you want today! You know I am always here if you want some movie recommendations. Just ask me [how] if you are intersted!"
+      media = "https://media.giphy.com/media/rMDszhcRpjEas/giphy.gif"
+    elsif response == "end"
+      message = "I hope you found what you want today! See you later~"
+    elsif response == "thanks"
+      message = "Aww you are welcome! Glad that I could help!"
+    elsif response == "help"
+      message = "Send me a selfie and I will find a movie for your mood today! Or text me with your current feeling like [happy][bored][upset] or genre types like [comedy][action]. "
     else
-      puts response2.results[number]
-      title = response2['results'][number]["original_title"]
-      poster = response2['results'][number]["poster_path"]
-      overview = response2['results'][number]["overview"]
-      rating = response2['results'][number]["vote_average"]
-    end
+      if number_even_odd % 2 == 0
+        puts response.results[number]
+        title = response['results'][number]["original_title"]
+        poster = response['results'][number]["poster_path"]
+        overview = response['results'][number]["overview"]
+        rating = response['results'][number]["vote_average"]
+      else
+        puts response2.results[number]
+        title = response2['results'][number]["original_title"]
+        poster = response2['results'][number]["poster_path"]
+        overview = response2['results'][number]["overview"]
+        rating = response2['results'][number]["vote_average"]
+      end
 
-    media = 'https://image.tmdb.org/t/p/w1280' + poster.to_s
-    message = '-
+      media = 'https://image.tmdb.org/t/p/w1280' + poster.to_s
+      message = '-
 Gotcha! One option I have for you is ' + title + '.
 
 Rating: ' + rating.to_s + '/10
@@ -336,6 +352,7 @@ Rating: ' + rating.to_s + '/10
 Overview: ' + overview + '
 
 If you want another option, type [yes].'
+    end
 
     return message, media
 end
