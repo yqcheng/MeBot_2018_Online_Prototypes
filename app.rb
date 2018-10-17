@@ -269,7 +269,7 @@ def determine_response body
     title = response['results'][number]["original_title"]
     poster = response['results'][number]["poster_path"]
 
-    media = 'https://image.tmdb.org/t/p/w1280' + poster.to_s
+    #media = 'https://image.tmdb.org/t/p/w1280' + poster.to_s
     message = 'One option I have for you is ' + title + '. If you want another option, type [yes].'
 
 end
