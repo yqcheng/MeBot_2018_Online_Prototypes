@@ -113,7 +113,7 @@ get "/sms/incoming" do
   if session["counter"] == 1
      message = "Thanks for your first message. I am here to help you find a movie ! Ask me for a movie by texting a genre or your feeling."
     # media = "https://media.giphy.com/media/13ZHjidRzoi7n2/giphy.gif"
-		media = "https://media.giphy.com/media/rMDszhcRpjEas/giphy.gif"
+		media = "https://media.giphy.com/media/Hajweqbuiwp20/giphy.gif"
   else
 
 
